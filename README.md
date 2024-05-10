@@ -13,6 +13,6 @@ additional tasks:
 pyinstaller
 
 references :
-[<https://realpython.com/python-gui-tkinter/](https://realpython.com/python-gui-tkinter/>)
-[<https://www.geeksforgeeks.org/python-tkinter-tutorial/](https://www.geeksforgeeks.org/python-tkinter-tutorial/>)
-[<https://www.tutorialspoint.com/python/python_gui_programming.htm](https://www.tutorialspoint.com/python/python_gui_programming.htm>)
+* https://realpython.com/python-gui-tkinter/
+* https://www.geeksforgeeks.org/python-tkinter-tutorial
+* https://www.tutorialspoint.com/python/python_gui_programming.htm
