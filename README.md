@@ -1,0 +1,1 @@
+Sticky notes app in Python
