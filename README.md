@@ -12,7 +12,7 @@
 additional tasks:
 pyinstaller
 
-## references
+## References
 
 * <https://realpython.com/python-gui-tkinter/>
 * <https://www.geeksforgeeks.org/python-tkinter-tutorial>
