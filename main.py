@@ -32,12 +32,18 @@ class NoteWindow(QDialog):
         layout = QVBoxLayout()
         layout.setContentsMargins(10, 10, 10, 10)
 
-        self.title_label = QLabel()
-        self.title_label.setStyleSheet("font-weight: bold;")
+        # Title Label
+        self.title_label = QTextEdit()
+        self.title_label.setMaximumHeight(self.title_label.fontMetrics().height() +8)
+        self.title_label.setStyleSheet("font-weight: bold; border: 0; padding: 0;")
+        self.title_label.setPlaceholderText("Title")
         self.update_title_label()
 
+
+        # Text Edit
         self.text_edit = QTextEdit()
         self.text_edit.setPlaceholderText("Enter your note here...")
+        self.text_edit.setStyleSheet("border: 0; padding: 0;")
         self.text_edit.textChanged.connect(self.update_note)
 
         layout.addWidget(self.title_label)
@@ -46,6 +52,7 @@ class NoteWindow(QDialog):
         button_layout = QHBoxLayout()
         button_layout.addStretch()
         self.add_note_button = QPushButton("+")
+        self.add_note_button.setStyleSheet("border: 5; padding: 5;")
         self.add_note_button.clicked.connect(self.add_note)
         button_layout.addWidget(self.add_note_button)
 
@@ -55,7 +62,7 @@ class NoteWindow(QDialog):
         self.setStyleSheet(f"background-color: {self.color.name()};")
 
         self.setWindowTitle("Note")
-        self.resize(300, 200)
+        self.resize(320, 220)
 
     def update_title_label(self):
         self.title_label.setText(self.title if self.title else "Untitled")
@@ -64,7 +71,8 @@ class NoteWindow(QDialog):
         self.note = self.text_edit.toPlainText()
 
     def add_note(self):
-        new_note = NoteWindow()
+        filename = f"notes/note_{len(os.listdir('notes')) + 1}.txt"
+        new_note = NoteWindow(filename=filename, parent=self)
         new_note.show()
 
     def random_color(self):
@@ -79,6 +87,7 @@ class NoteWindow(QDialog):
         with open(self.filename, "w") as file:
             file.write(f"Title: {self.title}\n")
             file.write(self.note)
+            # file.write(f"Color: {self.color.red()}, {self.color.green()}, {self.color.blue()}\n")
 
 
 def load_notes():
@@ -104,4 +113,5 @@ if __name__ == "__main__":
     # Show all loaded notes
     for note in notes:
         note.show()
+
     sys.exit(app.exec())
