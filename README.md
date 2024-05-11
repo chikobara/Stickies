@@ -14,6 +14,7 @@ pyinstaller
 
 ## References
 
+* <https://www.pythonguis.com/pyqt6/>
 * <https://realpython.com/python-gui-tkinter/>
 * <https://www.geeksforgeeks.org/python-tkinter-tutorial>
 * <https://www.tutorialspoint.com/python/python_gui_programming.htm>
