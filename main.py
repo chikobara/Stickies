@@ -34,11 +34,10 @@ class NoteWindow(QDialog):
 
         # Title Label
         self.title_label = QTextEdit()
-        self.title_label.setMaximumHeight(self.title_label.fontMetrics().height() +8)
+        self.title_label.setMaximumHeight(self.title_label.fontMetrics().height() + 8)
         self.title_label.setStyleSheet("font-weight: bold; border: 0; padding: 0;")
         self.title_label.setPlaceholderText("Title")
         self.update_title_label()
-
 
         # Text Edit
         self.text_edit = QTextEdit()
