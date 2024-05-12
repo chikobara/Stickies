@@ -7,12 +7,10 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QTextEdit,
     QPushButton,
-    QLabel,
-    QColorDialog,
     QHBoxLayout,
 )
 from PyQt6.QtGui import QColor
-
+from datetime import datetime
 
 class NoteWindow(QDialog):
     def __init__(self, title="", note="", filename="", parent=None):
@@ -20,7 +18,7 @@ class NoteWindow(QDialog):
         self.filename = filename
         self.title = title
         self.note = note
-        self.color = self.random_color()
+        self.color = self.random_color()  # Initialize color here
         self.setup_ui()
         self.set_title_and_note()
 
@@ -48,18 +46,26 @@ class NoteWindow(QDialog):
         layout.addWidget(self.title_label)
         layout.addWidget(self.text_edit)
 
-        button_layout = QHBoxLayout()
-        button_layout.addStretch()
+        # Buttons Layout
+        buttons_layout = QHBoxLayout()
+        buttons_layout.addStretch()
+
+        # Minus Button
+        self.delete_note_button = QPushButton("-")
+        self.delete_note_button.setStyleSheet("border: 5; padding: 5;")
+        self.delete_note_button.clicked.connect(self.delete_note)
+        buttons_layout.addWidget(self.delete_note_button)
+
+        # Plus Button
         self.add_note_button = QPushButton("+")
         self.add_note_button.setStyleSheet("border: 5; padding: 5;")
         self.add_note_button.clicked.connect(self.add_note)
-        button_layout.addWidget(self.add_note_button)
+        buttons_layout.addWidget(self.add_note_button)
 
-        layout.addLayout(button_layout)
+        layout.addLayout(buttons_layout)
 
         self.setLayout(layout)
         self.setStyleSheet(f"background-color: {self.color.name()};")
-
         self.setWindowTitle("Note")
         self.resize(320, 220)
 
@@ -70,9 +76,17 @@ class NoteWindow(QDialog):
         self.note = self.text_edit.toPlainText()
 
     def add_note(self):
-        filename = f"notes/note_{len(os.listdir('notes')) + 1}.txt"
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        filename = f"notes/note_{timestamp}.txt"
         new_note = NoteWindow(filename=filename, parent=self)
         new_note.show()
+
+    def delete_note(self):
+        # Remove the note's text file
+        if os.path.exists(self.filename):
+            os.remove(self.filename)
+        # Close the note window
+        self.close()
 
     def random_color(self):
         return QColor(
@@ -86,7 +100,6 @@ class NoteWindow(QDialog):
         with open(self.filename, "w") as file:
             file.write(f"Title: {self.title}\n")
             file.write(self.note)
-            # file.write(f"Color: {self.color.red()}, {self.color.green()}, {self.color.blue()}\n")
 
 
 def load_notes():
