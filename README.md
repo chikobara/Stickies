@@ -9,8 +9,9 @@
 4. Save notes
 5. Delete notes
 
-additional tasks:
-pyinstaller
+## Additional tasks:
+1. pyinstaller
+2. Always on top
 
 ## References
 
