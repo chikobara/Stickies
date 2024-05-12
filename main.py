@@ -23,7 +23,7 @@ class NoteWindow(QDialog):
         self.set_title_and_note()
 
     def set_title_and_note(self):
-        self.title_label.setText(self.title)
+        self.title_label.setPlainText(self.title)
         self.text_edit.setPlainText(self.note)
 
     def setup_ui(self):
@@ -35,7 +35,7 @@ class NoteWindow(QDialog):
         self.title_label.setMaximumHeight(self.title_label.fontMetrics().height() + 8)
         self.title_label.setStyleSheet("font-weight: bold; border: 0; padding: 0;")
         self.title_label.setPlaceholderText("Title")
-        self.update_title_label()
+        self.title_label.textChanged.connect(self.update_title_label)
 
         # Text Edit
         self.text_edit = QTextEdit()
@@ -70,7 +70,7 @@ class NoteWindow(QDialog):
         self.resize(320, 220)
 
     def update_title_label(self):
-        self.title_label.setText(self.title if self.title else "Untitled")
+        self.title = self.title_label.toPlainText()
 
     def update_note(self):
         self.note = self.text_edit.toPlainText()
