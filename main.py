@@ -14,10 +14,13 @@ from PyQt6.QtGui import QColor
 from datetime import datetime
 from PyQt6.QtWidgets import QFrame, QWidget
 
+
 class CustomWindowFrame(QFrame):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowCloseButtonHint)
+        self.setWindowFlags(
+            Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowCloseButtonHint
+        )
         self.dragPosition = None
 
     def mousePressEvent(self, event):
