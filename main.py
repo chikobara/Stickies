@@ -13,6 +13,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor
 from datetime import datetime
 from PyQt6.QtWidgets import QFrame, QWidget
+import markdown2
 
 
 class CustomWindowFrame(QFrame):
@@ -54,7 +55,8 @@ class NoteWindow(CustomWindowFrame):
 
     def set_title_and_note(self):
         self.title_label.setPlainText(self.title)
-        self.text_edit.setPlainText(self.note)
+        html_content = markdown2.markdown(self.note)
+        self.text_edit.setHtml(html_content)
 
     def setup_ui(self):
         layout = QVBoxLayout()
