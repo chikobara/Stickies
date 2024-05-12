@@ -9,10 +9,37 @@ from PyQt6.QtWidgets import (
     QPushButton,
     QHBoxLayout,
 )
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor
 from datetime import datetime
+from PyQt6.QtWidgets import QFrame, QWidget
 
-class NoteWindow(QDialog):
+class CustomWindowFrame(QFrame):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowCloseButtonHint)
+        self.dragPosition = None
+
+    def mousePressEvent(self, event):
+        # Handle window dragging
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.dragPosition = event.pos()  # Use pos() instead of globalPos()
+            event.accept()
+
+    def mouseMoveEvent(self, event):
+        # Handle window dragging (optional)
+        if self.dragPosition:
+            diff = event.pos() - self.dragPosition
+            self.move(self.x() + diff.x(), self.y() + diff.y())
+            self.dragPosition = event.pos()
+            event.accept()
+
+    def mouseReleaseEvent(self, event):
+        # Handle window dragging (optional)
+        self.dragPosition = None
+
+
+class NoteWindow(CustomWindowFrame):
     def __init__(self, title="", note="", filename="", parent=None):
         super().__init__(parent)
         self.filename = filename
@@ -79,6 +106,13 @@ class NoteWindow(QDialog):
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         filename = f"notes/note_{timestamp}.txt"
         new_note = NoteWindow(filename=filename, parent=self)
+
+        # Get the current position of the parent window
+        parent_pos = self.pos()
+
+        # Update the position of the new note with the offset
+        new_note.move(parent_pos.x() + 20, parent_pos.y() + 20)
+
         new_note.show()
 
     def delete_note(self):
@@ -106,15 +140,27 @@ def load_notes():
     notes = []
     if not os.path.exists("notes"):
         os.makedirs("notes")
+    current_x = 50  # Initial x-position for the first note
+    current_y = 50  # Initial y-position for the first note
     for filename in os.listdir("notes"):
         if filename.endswith(".txt"):
             with open(os.path.join("notes", filename), "r") as file:
                 lines = file.readlines()
-                title = lines[0][7:].strip() if lines else ""
+                title = (
+                    lines[0][7:].strip()
+                    if lines and lines[0].startswith("Title: ")
+                    else ""
+                )
                 note_content = "".join(lines[1:]) if len(lines) > 1 else ""
                 note_window = NoteWindow(
                     title, note_content, os.path.join("notes", filename)
                 )
+
+                # Adjust the position for the new note window
+                note_window.move(current_x, current_y)
+                current_x += 20  # Update x-position for the next note
+                current_y += 20  # Update y-position for the next note
+
                 notes.append(note_window)
     return notes
 
