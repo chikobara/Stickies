@@ -64,7 +64,7 @@ class NoteWindow(CustomWindowFrame):
 
         # Title Label
         self.title_label = QTextEdit()
-        self.title_label.setMaximumHeight(self.title_label.fontMetrics().height() + 8)
+        self.title_label.setMaximumHeight(self.title_label.fontMetrics().height() + 20)
         self.title_label.setStyleSheet("font-weight: bold; border: 0; padding: 0;")
         self.title_label.setPlaceholderText("Title")
         self.title_label.textChanged.connect(self.update_title_label)
@@ -147,6 +147,7 @@ def load_notes():
         os.makedirs("notes")
     current_x = 50  # Initial x-position for the first note
     current_y = 50  # Initial y-position for the first note
+    # if not file in os.listdir("notes"):
     for filename in os.listdir("notes"):
         if filename.endswith(".txt"):
             with open(os.path.join("notes", filename), "r") as file:
