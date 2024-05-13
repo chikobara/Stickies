@@ -16,6 +16,10 @@ from PyQt6.QtWidgets import QFrame, QWidget
 import markdown2
 
 
+
+
+
+
 class CustomWindowFrame(QFrame):
     def __init__(self, parent=None):
         super().__init__(parent)
