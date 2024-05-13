@@ -13,6 +13,7 @@
 1. pyinstaller
 2. Always on top
 
+
 ## References
 
 * <https://www.pythonguis.com/pyqt6/>
