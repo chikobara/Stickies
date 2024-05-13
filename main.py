@@ -15,11 +15,6 @@ from datetime import datetime
 from PyQt6.QtWidgets import QFrame, QWidget
 import markdown2
 
-
-
-
-
-
 class CustomWindowFrame(QFrame):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -45,6 +40,9 @@ class CustomWindowFrame(QFrame):
     def mouseReleaseEvent(self, event):
         # Handle window dragging (optional)
         self.dragPosition = None
+
+
+
 
 
 class NoteWindow(CustomWindowFrame):
