@@ -15,6 +15,7 @@ from datetime import datetime
 from PyQt6.QtWidgets import QFrame, QWidget
 import markdown2
 
+
 class CustomWindowFrame(QFrame):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -40,9 +41,6 @@ class CustomWindowFrame(QFrame):
     def mouseReleaseEvent(self, event):
         # Handle window dragging (optional)
         self.dragPosition = None
-
-
-
 
 
 class NoteWindow(CustomWindowFrame):
@@ -112,7 +110,13 @@ class NoteWindow(CustomWindowFrame):
     def add_note(self):
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         filename = f"notes/note_{timestamp}.txt"
-        new_note = NoteWindow(filename=filename, parent=self)
+
+        # Create a new note file with a default title and empty content
+        with open(filename, "w") as file:
+            file.write("Title: Untitled\n")
+            file.write("")
+
+        new_note = NoteWindow(title="Untitled", note="", filename=filename, parent=self)
 
         # Get the current position of the parent window
         parent_pos = self.pos()
@@ -149,9 +153,21 @@ def load_notes():
         os.makedirs("notes")
     current_x = 50  # Initial x-position for the first note
     current_y = 50  # Initial y-position for the first note
-    # if not file in os.listdir("notes"):
-    for filename in os.listdir("notes"):
-        if filename.endswith(".txt"):
+
+    # Check if there are any .txt files in the "notes" folder
+    txt_files = [f for f in os.listdir("notes") if f.endswith(".txt")]
+
+    if not txt_files:
+        # No notes found, create a default note
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        filename = f"notes/note_{timestamp}.txt"
+        with open(filename, "w") as file:
+            file.write("Title: Untitled\n")
+            file.write("")
+        note_window = NoteWindow("Untitled", "", filename)
+        notes.append(note_window)
+    else:
+        for filename in txt_files:
             with open(os.path.join("notes", filename), "r") as file:
                 lines = file.readlines()
                 title = (
