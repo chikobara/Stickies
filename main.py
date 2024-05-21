@@ -141,38 +141,9 @@ class NoteWindow(CustomWindowFrame):
 
         # Toolbar
         toolbar = QToolBar()
-        layout.addWidget(toolbar)
-
-        # Add actions for rich text editing functions with Unicode characters
-        bold_action = QAction("B", self)  # Unicode character for bold
-        bold_action.triggered.connect(self.toggle_bold)
-        toolbar.addAction(bold_action)
-
-        italic_action = QAction("I", self)  # Unicode character for italic
-        italic_action.triggered.connect(self.toggle_italic)
-        toolbar.addAction(italic_action)
-
-        underline_action = QAction("U", self)  # Unicode character for underline
-        underline_action.triggered.connect(self.toggle_underline)
-        toolbar.addAction(underline_action)
-
-        bullet_list_action = QAction("•", self)  # Unicode character for bullet point
-        bullet_list_action.triggered.connect(self.toggle_bullet_list)
-        toolbar.addAction(bullet_list_action)
-
-        numbered_list_action = QAction(
-            "1.", self
-        )  # Unicode character for numbered list
-        numbered_list_action.triggered.connect(self.toggle_numbered_list)
-        toolbar.addAction(numbered_list_action)
-
-        toolbar.addSeparator()
 
         toolbar.setStyleSheet("QToolBar QToolButton { color: darkgray; }")
         layout.addLayout(buttons_layout)
-        toolbar.addSeparator()
-
-        layout.addWidget(toolbar)
 
         self.setLayout(layout)
         self.setStyleSheet(f"background-color: {self.color.name()};")
@@ -262,7 +233,6 @@ class NoteWindow(CustomWindowFrame):
         if os.path.exists(self.filename):
             os.remove(self.filename)
         self.close()
-
 
     def show_color_menu(self):
         color_names = [
