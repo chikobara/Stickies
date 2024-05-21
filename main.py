@@ -9,10 +9,10 @@ from PyQt6.QtWidgets import (
     QPushButton,
     QHBoxLayout,
 )
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QPoint
 from PyQt6.QtGui import QColor
 from datetime import datetime
-from PyQt6.QtWidgets import QFrame, QWidget
+from PyQt6.QtWidgets import QFrame
 import markdown2
 
 
@@ -37,7 +37,6 @@ class CustomWindowFrame(QFrame):
             event.accept()
 
     def mouseReleaseEvent(self, event):
-        # Handle window dragging (optional)
         self.dragPosition = None
 
 
@@ -47,7 +46,7 @@ class NoteWindow(CustomWindowFrame):
         self.filename = filename
         self.title = title
         self.note = note
-        self.color = self.random_color()  # Initialize color here
+        self.color = self.random_color()
         self.setup_ui()
         self.set_title_and_note()
 
@@ -109,26 +108,28 @@ class NoteWindow(CustomWindowFrame):
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         filename = f"notes/note_{timestamp}.txt"
 
-        # Create a new note file with a default title and empty content
+        # Ensure the "notes" directory exists before file operations
+        if not os.path.exists("notes"):
+            os.makedirs("notes")
+
         with open(filename, "w") as file:
             file.write("Title: Untitled\n")
             file.write("")
 
-        new_note = NoteWindow(title="Untitled", note="", filename=filename, parent=self)
+        # Create a new independent instance of NoteWindow
+        new_note = NoteWindow(title="Untitled", note="", filename=filename)
 
-        # Get the current position of the parent window
+        # Position the new note with an offset
         parent_pos = self.pos()
-
-        # Update the position of the new note with the offset
         new_note.move(parent_pos.x() + 20, parent_pos.y() + 20)
-
         new_note.show()
 
+        # Add the new note to the list of notes
+        notes.append(new_note)
+
     def delete_note(self):
-        # Remove the note's text file
         if os.path.exists(self.filename):
             os.remove(self.filename)
-        # Close the note window
         self.close()
 
     def random_color(self):
@@ -140,30 +141,33 @@ class NoteWindow(CustomWindowFrame):
         self.save_note()
 
     def save_note(self):
+        # Ensure the "notes" directory exists before file operations
+        if not os.path.exists("notes"):
+            os.makedirs("notes")
+
         with open(self.filename, "w") as file:
             file.write(f"Title: {self.title}\n")
             file.write(self.note)
 
 
 def load_notes():
-    notes = []
+    loaded_notes = []
     if not os.path.exists("notes"):
         os.makedirs("notes")
-    current_x = 50  # Initial x-position for the first note
-    current_y = 50  # Initial y-position for the first note
 
-    # Check if there are any .txt files in the "notes" folder
+    current_x = 50
+    current_y = 50
+
     txt_files = [f for f in os.listdir("notes") if f.endswith(".txt")]
 
     if not txt_files:
-        # No notes found, create a default note
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         filename = f"notes/note_{timestamp}.txt"
         with open(filename, "w") as file:
             file.write("Title: Untitled\n")
             file.write("")
         note_window = NoteWindow("Untitled", "", filename)
-        notes.append(note_window)
+        loaded_notes.append(note_window)
     else:
         for filename in txt_files:
             with open(os.path.join("notes", filename), "r") as file:
@@ -178,19 +182,19 @@ def load_notes():
                     title, note_content, os.path.join("notes", filename)
                 )
 
-                # Adjust the position for the new note window
                 note_window.move(current_x, current_y)
-                current_x += 20  # Update x-position for the next note
-                current_y += 20  # Update y-position for the next note
+                current_x += 20
+                current_y += 20
 
-                notes.append(note_window)
-    return notes
+                loaded_notes.append(note_window)
+    return loaded_notes
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     notes = load_notes()
-    # Show all loaded notes
+
+    # Show all loaded notes at startup
     for note in notes:
         note.show()
 
