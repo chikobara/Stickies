@@ -12,9 +12,8 @@ from PyQt6.QtWidgets import (
     QWidget,
     QSizePolicy,
     QMenu,
-    QLabel,
 )
-from PyQt6.QtCore import Qt, QPoint
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import (
     QColor,
     QTextListFormat,
@@ -74,7 +73,7 @@ class NoteWindow(CustomWindowFrame):
         )  # Use provided color or generate a new one
         self.note = note
         self.setup_ui()
-        self.resize(400, 300)
+        self.resize(800, 600)
         self.set_title_and_note()
 
     def set_title_and_note(self):
@@ -139,10 +138,6 @@ class NoteWindow(CustomWindowFrame):
         self.color_picker_button.clicked.connect(self.show_color_menu)
         buttons_layout.addWidget(self.color_picker_button)
 
-        # Toolbar
-        toolbar = QToolBar()
-
-        toolbar.setStyleSheet("QToolBar QToolButton { color: darkgray; }")
         layout.addLayout(buttons_layout)
 
         self.setLayout(layout)
@@ -156,7 +151,8 @@ class NoteWindow(CustomWindowFrame):
 
     def update_note(self):
         self.note = self.text_edit.toPlainText()
-        self.update_note_color()  # Update note color when the text changes
+        # Update note color when the text changes
+        self.update_note_color()
 
     def update_title_color(self):
         title_color = "#171717" if self.title_label.toPlainText() else "#2A2A2A"
@@ -194,40 +190,6 @@ class NoteWindow(CustomWindowFrame):
         notes.append(new_note)
 
         # Define functions for toggling rich text formatting
-
-    def toggle_bold(self):
-        # Toggle bold formatting for selected text
-        text_cursor = self.text_edit.textCursor()
-        if text_cursor.hasSelection():
-            font = text_cursor.charFormat().font()
-            font.setBold(not font.bold())
-            text_cursor.mergeCharFormat(QTextCharFormat())
-
-    def toggle_italic(self):
-        # Toggle italic formatting for selected text
-        text_cursor = self.text_edit.textCursor()
-        if text_cursor.hasSelection():
-            font = text_cursor.charFormat().font()
-            font.setItalic(not font.italic())
-            text_cursor.mergeCharFormat(QTextCharFormat())
-
-    def toggle_underline(self):
-        # Toggle underline formatting for selected text
-        text_cursor = self.text_edit.textCursor()
-        if text_cursor.hasSelection():
-            font = text_cursor.charFormat().font()
-            font.setUnderline(not font.underline())
-            text_cursor.mergeCharFormat(QTextCharFormat())
-
-    def toggle_bullet_list(self):
-        # Insert bullet list at the current cursor position
-        cursor = self.text_edit.textCursor()
-        cursor.insertList(QTextListFormat.ListDisc)
-
-    def toggle_numbered_list(self):
-        # Insert numbered list at the current cursor position
-        cursor = self.text_edit.textCursor()
-        cursor.insertList(QTextListFormat.ListDecimal)
 
     def delete_note(self):
         file = os.path.basename(self.filename)

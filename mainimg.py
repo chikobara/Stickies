@@ -75,7 +75,7 @@ class NoteWindow(CustomWindowFrame):
         )  # Use provided color or generate a new one
         self.note = note
         self.setup_ui()
-        self.resize(400, 300)
+        self.resize(800, 600)
         self.set_title_and_note()
 
     def set_title_and_note(self):
@@ -196,29 +196,6 @@ class NoteWindow(CustomWindowFrame):
         if not cursor.hasSelection():
             cursor.select(cursor.SelectionType.WordUnderCursor)
         cursor.mergeCharFormat(fmt)
-
-    def bold_text(self):
-        fmt = QTextCharFormat()
-        fmt.setFontWeight(75 if not self.text_edit.fontWeight() == 75 else 50)
-        self.format_text(fmt)
-
-    def italic_text(self):
-        fmt = QTextCharFormat()
-        fmt.setFontItalic(not self.text_edit.fontItalic())
-        self.format_text(fmt)
-
-    def underline_text(self):
-        fmt = QTextCharFormat()
-        fmt.setFontUnderline(not self.text_edit.fontUnderline())
-        self.format_text(fmt)
-
-    def bullet_list(self):
-        cursor = self.text_edit.textCursor()
-        cursor.insertList(QTextListFormat.Style.ListDisc)
-
-    def numbered_list(self):
-        cursor = self.text_edit.textCursor()
-        cursor.insertList(QTextListFormat.Style.ListDecimal)
 
     def insert_image(self):
         file_path, _ = QFileDialog.getOpenFileName(
