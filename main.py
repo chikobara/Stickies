@@ -11,13 +11,17 @@ from PyQt6.QtWidgets import (
     QFrame,
     QWidget,
     QSizePolicy,
+    QMenu
 )
 from PyQt6.QtCore import Qt, QPoint
-<<<<<<< Updated upstream
-from PyQt6.QtGui import QColor, QPixmap, QIcon, QTextCharFormat, QTextListFormat
-=======
-from PyQt6.QtGui import QColor, QTextListFormat, QTextCharFormat, QAction
->>>>>>> Stashed changes
+from PyQt6.QtGui import (
+    QColor,
+    QTextListFormat,
+    QTextCharFormat,
+    QAction,
+    QPixmap,
+    QIcon,
+)
 from datetime import datetime
 import markdown2
 
@@ -30,7 +34,6 @@ PREDEFINED_COLORS = [
     QColor(186, 201, 251),  # Purple
     QColor(238, 238, 238),  # Gray
 ]
-
 
 class CustomWindowFrame(QFrame):
     def __init__(self, parent=None):
@@ -75,7 +78,7 @@ class NoteWindow(CustomWindowFrame):
     def set_title_and_note(self):
         self.title_label.setPlainText(self.title)
         self.update_title_color()  # Update title color
-        self.update_note_color()   # Update note color
+        self.update_note_color()  # Update note color
         html_content = markdown2.markdown(self.note)
         self.text_edit.setHtml(html_content)
 
@@ -155,7 +158,6 @@ class NoteWindow(CustomWindowFrame):
         toolbar.addSeparator()
 
         toolbar.setStyleSheet("QToolBar QToolButton { color: darkgray; }")
-
         layout.addLayout(buttons_layout)
         toolbar.addSeparator()
 
@@ -209,7 +211,8 @@ class NoteWindow(CustomWindowFrame):
         # Add the new note to the list of notes
         notes.append(new_note)
 
-    # Define functions for toggling rich text formatting
+        # Define functions for toggling rich text formatting
+
     def toggle_bold(self):
         # Toggle bold formatting for selected text
         text_cursor = self.text_edit.textCursor()
@@ -248,6 +251,23 @@ class NoteWindow(CustomWindowFrame):
         if os.path.exists(self.filename):
             os.remove(self.filename)
         self.close()
+
+    def show_color_menu(self):
+        menu = QMenu(self)
+        for color in PREDEFINED_COLORS:
+            action = QAction(color.name(), self)
+            action.triggered.connect(lambda checked, c=color: self.pick_color(c))
+            menu.addAction(action)
+        menu.exec(
+            self.color_picker_button.mapToGlobal(
+                self.color_picker_button.rect().bottomLeft()
+            )
+        )
+
+    def pick_color(self, color):
+        # Change the color of the note based on the selected color from the menu
+        self.color = color
+        self.setStyleSheet(f"background-color: {self.color.name()};")
 
     def random_color(self):
         return random.choice(PREDEFINED_COLORS)
