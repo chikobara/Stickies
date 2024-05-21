@@ -12,6 +12,7 @@ from PyQt6.QtWidgets import (
     QWidget,
     QSizePolicy,
     QMenu,
+    QLabel,
 )
 from PyQt6.QtCore import Qt, QPoint
 from PyQt6.QtGui import (
@@ -262,12 +263,22 @@ class NoteWindow(CustomWindowFrame):
             os.remove(self.filename)
         self.close()
 
+
     def show_color_menu(self):
+        color_names = [
+            "Yellow",
+            "Blue",
+            "Pink",
+            "Green",
+            "Purple",
+            "Gray",
+        ]  # Define custom names for the colors
         menu = QMenu(self)
-        for color in PREDEFINED_COLORS:
-            action = QAction(color.name(), self)
+        for color, name in zip(PREDEFINED_COLORS, color_names):
+            action = QAction(name, self)  # Use custom name instead of hex code
             action.triggered.connect(lambda checked, c=color: self.pick_color(c))
             menu.addAction(action)
+        menu.setStyleSheet("QMenu { color: #171717; }")  # Set text color of the menu
         menu.exec(
             self.color_picker_button.mapToGlobal(
                 self.color_picker_button.rect().bottomLeft()
