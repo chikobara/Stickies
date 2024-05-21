@@ -230,8 +230,13 @@ class NoteWindow(CustomWindowFrame):
         cursor.insertList(QTextListFormat.ListDecimal)
 
     def delete_note(self):
+        path = self.filename
+
         if os.path.exists(self.filename):
-            os.remove(self.filename)
+            os.remove(path)
+            print(self.filename)
+
+        notes.remove(self)
         self.close()
 
     def show_color_menu(self):
