@@ -235,6 +235,7 @@ class NoteWindow(CustomWindowFrame):
         print(file)
         if os.path.exists(self.filename):
             path = os.path.join("notes", file)
+            print(path)
             os.remove(path)
 
         notes.remove(self)
