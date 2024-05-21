@@ -11,7 +11,7 @@ from PyQt6.QtWidgets import (
     QFrame,
     QWidget,
     QSizePolicy,
-    QMenu
+    QMenu,
 )
 from PyQt6.QtCore import Qt, QPoint
 from PyQt6.QtGui import (
@@ -34,6 +34,7 @@ PREDEFINED_COLORS = [
     QColor(186, 201, 251),  # Purple
     QColor(238, 238, 238),  # Gray
 ]
+
 
 class CustomWindowFrame(QFrame):
     def __init__(self, parent=None):
