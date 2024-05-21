@@ -85,6 +85,9 @@ class NoteWindow(CustomWindowFrame):
         self.text_edit.setStyleSheet("border: 0; padding: 0;")
         self.text_edit.textChanged.connect(self.update_note)
 
+        # enable rich text formatting
+        self.text_edit.setAcceptRichText(True)
+
         layout.addWidget(self.title_label)
         layout.addWidget(self.text_edit)
 
