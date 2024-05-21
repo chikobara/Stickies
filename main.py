@@ -10,19 +10,19 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
 )
 from PyQt6.QtCore import Qt, QPoint
-from PyQt6.QtGui import QColor
+from PyQt6.QtGui import QColor, QPixmap, QIcon, QTextCharFormat
 from datetime import datetime
 from PyQt6.QtWidgets import QFrame
 import markdown2
 
 # Define a list of predefined colors
 PREDEFINED_COLORS = [
-    QColor(253, 243, 179),  # Yellow
-    QColor(208, 230, 250),  # Blue
-    QColor(246, 206, 228),  # Pink
-    QColor(211, 240, 201),  # Green
-    QColor(227, 208, 252),  # Purple
-    QColor(68, 68, 68),  # Gray
+    QColor(252, 244, 167),  # Yellow
+    QColor(188, 242, 253),  # Blue
+    QColor(246, 201, 200),  # Pink
+    QColor(195, 253, 170),  # Green
+    QColor(186, 201, 251),  # Purple
+    QColor(238, 238, 238),  # Gray
 ]
 
 
@@ -65,6 +65,8 @@ class NoteWindow(CustomWindowFrame):
 
     def set_title_and_note(self):
         self.title_label.setPlainText(self.title)
+        self.update_title_color()  # Update title color
+        self.update_note_color()   # Update note color
         html_content = markdown2.markdown(self.note)
         self.text_edit.setHtml(html_content)
 
@@ -93,14 +95,18 @@ class NoteWindow(CustomWindowFrame):
         buttons_layout.addStretch()
 
         # Minus Button
-        self.delete_note_button = QPushButton("-")
-        self.delete_note_button.setStyleSheet("border: 5; padding: 5;")
+        self.delete_note_button = QPushButton()
+        self.delete_note_button.setIcon(QIcon(QPixmap("icons/trash.circle.png")))
+        self.delete_note_button.setStyleSheet("border: 5; padding: 5; border: none;")
+        self.delete_note_button.setFixedSize(24, 24)
         self.delete_note_button.clicked.connect(self.delete_note)
         buttons_layout.addWidget(self.delete_note_button)
 
         # Plus Button
-        self.add_note_button = QPushButton("+")
-        self.add_note_button.setStyleSheet("border: 5; padding: 5;")
+        self.add_note_button = QPushButton()
+        self.add_note_button.setIcon(QIcon(QPixmap("icons/plus.circle.png")))
+        self.add_note_button.setStyleSheet("border: 5; padding: 5; border: none;")
+        self.add_note_button.setFixedSize(24, 24)
         self.add_note_button.clicked.connect(self.add_note)
         buttons_layout.addWidget(self.add_note_button)
 
@@ -113,9 +119,21 @@ class NoteWindow(CustomWindowFrame):
 
     def update_title_label(self):
         self.title = self.title_label.toPlainText()
+        self.update_title_color()  # Update title color when the text changes
 
     def update_note(self):
         self.note = self.text_edit.toPlainText()
+        self.update_note_color()  # Update note color when the text changes
+
+    def update_title_color(self):
+        title_color = "#171717" if self.title_label.toPlainText() else "#2A2A2A"
+        self.title_label.setStyleSheet(
+            f"font-weight: bold; border: 0; padding: 0; color: {title_color};"
+        )
+
+    def update_note_color(self):
+        note_color = "#171717" if self.text_edit.toPlainText() else "#2A2A2A"
+        self.text_edit.setStyleSheet(f"border: 0; padding: 0; color: {note_color};")
 
     def add_note(self):
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
