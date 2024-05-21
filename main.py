@@ -15,6 +15,16 @@ from datetime import datetime
 from PyQt6.QtWidgets import QFrame
 import markdown2
 
+# Define a list of predefined colors
+PREDEFINED_COLORS = [
+    QColor(253, 243, 179),  # Yellow
+    QColor(208, 230, 250),  # Blue
+    QColor(246, 206, 228),  # Pink
+    QColor(211, 240, 201),  # Green
+    QColor(227, 208, 252),  # Purple
+    QColor(68, 68, 68),  # Gray
+]
+
 
 class CustomWindowFrame(QFrame):
     def __init__(self, parent=None):
@@ -41,12 +51,15 @@ class CustomWindowFrame(QFrame):
 
 
 class NoteWindow(CustomWindowFrame):
-    def __init__(self, title="", note="", filename="", parent=None):
+
+    def __init__(self, title="", note="", filename="", parent=None, color=None):
         super().__init__(parent)
         self.filename = filename
         self.title = title
+        self.color = (
+            color if color else random.choice(PREDEFINED_COLORS)
+        )  # Use provided color or generate a new one
         self.note = note
-        self.color = self.random_color()
         self.setup_ui()
         self.set_title_and_note()
 
@@ -112,12 +125,14 @@ class NoteWindow(CustomWindowFrame):
         if not os.path.exists("notes"):
             os.makedirs("notes")
 
+        color = self.random_color()
         with open(filename, "w") as file:
             file.write("Title: Untitled\n")
+            file.write(f"Color: {color.rgb()}\n")
             file.write("")
 
         # Create a new independent instance of NoteWindow
-        new_note = NoteWindow(title="Untitled", note="", filename=filename)
+        new_note = NoteWindow(title="Untitled", note="", filename=filename, color=color)
 
         # Position the new note with an offset
         parent_pos = self.pos()
@@ -133,9 +148,7 @@ class NoteWindow(CustomWindowFrame):
         self.close()
 
     def random_color(self):
-        return QColor(
-            random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
-        )
+        return random.choice(PREDEFINED_COLORS)
 
     def closeEvent(self, event):
         self.save_note()
@@ -147,6 +160,7 @@ class NoteWindow(CustomWindowFrame):
 
         with open(self.filename, "w") as file:
             file.write(f"Title: {self.title}\n")
+            file.write(f"Color: {self.color.rgb()}\n")
             file.write(self.note)
 
 
@@ -163,10 +177,12 @@ def load_notes():
     if not txt_files:
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         filename = f"notes/note_{timestamp}.txt"
+        color = random.choice(PREDEFINED_COLORS)
         with open(filename, "w") as file:
             file.write("Title: Untitled\n")
+            file.write(f"Color: {color.rgb()}\n")
             file.write("")
-        note_window = NoteWindow("Untitled", "", filename)
+        note_window = NoteWindow("Untitled", "", filename, color=color)
         loaded_notes.append(note_window)
     else:
         for filename in txt_files:
@@ -177,9 +193,22 @@ def load_notes():
                     if lines and lines[0].startswith("Title: ")
                     else ""
                 )
-                note_content = "".join(lines[1:]) if len(lines) > 1 else ""
+                color_value = (
+                    int(lines[1][7:].strip())
+                    if len(lines) > 1 and lines[1].startswith("Color: ")
+                    else QColor(
+                        255, 255, 255
+                    ).rgb()  # Default to white if no color is specified
+                )
+                note_content = "".join(lines[2:]) if len(lines) > 2 else ""
                 note_window = NoteWindow(
-                    title, note_content, os.path.join("notes", filename)
+                    title,
+                    note_content,
+                    os.path.join("notes", filename),
+                    color=QColor.fromRgb(color_value),
+                )
+                note_window.setStyleSheet(
+                    f"background-color: {note_window.color.name()};"
                 )
 
                 note_window.move(current_x, current_y)
