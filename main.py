@@ -116,7 +116,7 @@ class NoteWindow(CustomWindowFrame):
         # Minus Button
         self.delete_note_button = QPushButton()
         self.delete_note_button.setIcon(QIcon(QPixmap("icons/trash.circle.png")))
-        self.delete_note_button.setStyleSheet("border: 5; padding: 5; border: none;")
+        self.delete_note_button.setStyleSheet("border: 2; padding: 2; border: none;")
         self.delete_note_button.setFixedSize(24, 24)
         self.delete_note_button.clicked.connect(self.delete_note)
         buttons_layout.addWidget(self.delete_note_button)
@@ -124,10 +124,19 @@ class NoteWindow(CustomWindowFrame):
         # Plus Button
         self.add_note_button = QPushButton()
         self.add_note_button.setIcon(QIcon(QPixmap("icons/plus.circle.png")))
-        self.add_note_button.setStyleSheet("border: 5; padding: 5; border: none;")
+        self.add_note_button.setStyleSheet("border: 2; padding: 2; border: none;")
         self.add_note_button.setFixedSize(24, 24)
         self.add_note_button.clicked.connect(self.add_note)
         buttons_layout.addWidget(self.add_note_button)
+
+        # Color Picker Button
+        self.color_picker_button = QPushButton()
+        self.color_picker_button.setIcon(QIcon(QPixmap("icons/drop.circle.png")))
+        self.color_picker_button.setStyleSheet("border: 2; padding: 2; border: none;")
+        self.color_picker_button.setFixedSize(24, 24)
+        self.color_picker_button.clicked.connect(self.show_color_menu)
+        buttons_layout.addWidget(self.color_picker_button)
+
         # Toolbar
         toolbar = QToolBar()
         layout.addWidget(toolbar)
