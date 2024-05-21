@@ -8,9 +8,11 @@ from PyQt6.QtWidgets import (
     QTextEdit,
     QPushButton,
     QHBoxLayout,
+    QAction,
+    QToolBar,
 )
 from PyQt6.QtCore import Qt, QPoint
-from PyQt6.QtGui import QColor, QPixmap, QIcon, QTextCharFormat
+from PyQt6.QtGui import QColor, QPixmap, QIcon, QTextCharFormat, QTextListFormat
 from datetime import datetime
 from PyQt6.QtWidgets import QFrame
 import markdown2
@@ -87,6 +89,9 @@ class NoteWindow(CustomWindowFrame):
         self.text_edit.setStyleSheet("border: 0; padding: 0;")
         self.text_edit.textChanged.connect(self.update_note)
 
+        # enable rich text formatting
+        self.text_edit.setAcceptRichText(True)
+
         layout.addWidget(self.title_label)
         layout.addWidget(self.text_edit)
 
@@ -159,6 +164,41 @@ class NoteWindow(CustomWindowFrame):
 
         # Add the new note to the list of notes
         notes.append(new_note)
+
+    # Define functions for toggling rich text formatting
+    def toggle_bold(self):
+        # Toggle bold formatting for selected text
+        text_cursor = self.text_edit.textCursor()
+        if text_cursor.hasSelection():
+            font = text_cursor.charFormat().font()
+            font.setBold(not font.bold())
+            text_cursor.mergeCharFormat(QTextCharFormat())
+
+    def toggle_italic(self):
+        # Toggle italic formatting for selected text
+        text_cursor = self.text_edit.textCursor()
+        if text_cursor.hasSelection():
+            font = text_cursor.charFormat().font()
+            font.setItalic(not font.italic())
+            text_cursor.mergeCharFormat(QTextCharFormat())
+
+    def toggle_underline(self):
+        # Toggle underline formatting for selected text
+        text_cursor = self.text_edit.textCursor()
+        if text_cursor.hasSelection():
+            font = text_cursor.charFormat().font()
+            font.setUnderline(not font.underline())
+            text_cursor.mergeCharFormat(QTextCharFormat())
+
+    def toggle_bullet_list(self):
+        # Insert bullet list at the current cursor position
+        cursor = self.text_edit.textCursor()
+        cursor.insertList(QTextListFormat.ListDisc)
+
+    def toggle_numbered_list(self):
+        # Insert numbered list at the current cursor position
+        cursor = self.text_edit.textCursor()
+        cursor.insertList(QTextListFormat.ListDecimal)
 
     def delete_note(self):
         if os.path.exists(self.filename):
