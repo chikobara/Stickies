@@ -1,5 +1,5 @@
 import sys
-import os
+import os, re
 import random
 from PyQt6.QtWidgets import (
     QApplication,
@@ -230,11 +230,12 @@ class NoteWindow(CustomWindowFrame):
         cursor.insertList(QTextListFormat.ListDecimal)
 
     def delete_note(self):
-        path = self.filename
+        file = self.filename[6::]
 
+        print(file)
         if os.path.exists(self.filename):
+            path = os.path.join("notes", file)
             os.remove(path)
-            print(self.filename)
 
         notes.remove(self)
         self.close()
