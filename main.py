@@ -230,8 +230,7 @@ class NoteWindow(CustomWindowFrame):
         cursor.insertList(QTextListFormat.ListDecimal)
 
     def delete_note(self):
-        file = self.filename[6::]
-
+        file = os.path.basename(self.filename)
         print(file)
         if os.path.exists(self.filename):
             path = os.path.join("notes", file)
