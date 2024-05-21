@@ -3,18 +3,22 @@ import os
 import random
 from PyQt6.QtWidgets import (
     QApplication,
-    QDialog,
     QVBoxLayout,
     QTextEdit,
     QPushButton,
     QHBoxLayout,
-    QAction,
     QToolBar,
+    QFrame,
+    QWidget,
+    QSizePolicy,
 )
 from PyQt6.QtCore import Qt, QPoint
+<<<<<<< Updated upstream
 from PyQt6.QtGui import QColor, QPixmap, QIcon, QTextCharFormat, QTextListFormat
+=======
+from PyQt6.QtGui import QColor, QTextListFormat, QTextCharFormat, QAction
+>>>>>>> Stashed changes
 from datetime import datetime
-from PyQt6.QtWidgets import QFrame
 import markdown2
 
 # Define a list of predefined colors
@@ -32,7 +36,9 @@ class CustomWindowFrame(QFrame):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowFlags(
-            Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowCloseButtonHint
+            Qt.WindowType.FramelessWindowHint
+            | Qt.WindowType.WindowCloseButtonHint
+            | Qt.WindowType.Window
         )
         self.dragPosition = None
 
@@ -63,6 +69,7 @@ class NoteWindow(CustomWindowFrame):
         )  # Use provided color or generate a new one
         self.note = note
         self.setup_ui()
+        self.resize(400, 300)
         self.set_title_and_note()
 
     def set_title_and_note(self):
@@ -94,6 +101,10 @@ class NoteWindow(CustomWindowFrame):
 
         layout.addWidget(self.title_label)
         layout.addWidget(self.text_edit)
+        # Add spacer to push toolbar to the bottom
+        spacer = QWidget()
+        spacer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        layout.addWidget(spacer)
 
         # Buttons Layout
         buttons_layout = QHBoxLayout()
@@ -114,8 +125,41 @@ class NoteWindow(CustomWindowFrame):
         self.add_note_button.setFixedSize(24, 24)
         self.add_note_button.clicked.connect(self.add_note)
         buttons_layout.addWidget(self.add_note_button)
+        # Toolbar
+        toolbar = QToolBar()
+        layout.addWidget(toolbar)
+
+        # Add actions for rich text editing functions with Unicode characters
+        bold_action = QAction("B", self)  # Unicode character for bold
+        bold_action.triggered.connect(self.toggle_bold)
+        toolbar.addAction(bold_action)
+
+        italic_action = QAction("I", self)  # Unicode character for italic
+        italic_action.triggered.connect(self.toggle_italic)
+        toolbar.addAction(italic_action)
+
+        underline_action = QAction("U", self)  # Unicode character for underline
+        underline_action.triggered.connect(self.toggle_underline)
+        toolbar.addAction(underline_action)
+
+        bullet_list_action = QAction("•", self)  # Unicode character for bullet point
+        bullet_list_action.triggered.connect(self.toggle_bullet_list)
+        toolbar.addAction(bullet_list_action)
+
+        numbered_list_action = QAction(
+            "1.", self
+        )  # Unicode character for numbered list
+        numbered_list_action.triggered.connect(self.toggle_numbered_list)
+        toolbar.addAction(numbered_list_action)
+
+        toolbar.addSeparator()
+
+        toolbar.setStyleSheet("QToolBar QToolButton { color: darkgray; }")
 
         layout.addLayout(buttons_layout)
+        toolbar.addSeparator()
+
+        layout.addWidget(toolbar)
 
         self.setLayout(layout)
         self.setStyleSheet(f"background-color: {self.color.name()};")
@@ -227,8 +271,8 @@ def load_notes():
     if not os.path.exists("notes"):
         os.makedirs("notes")
 
-    current_x = 50
-    current_y = 50
+    current_x = 100
+    current_y = 100
 
     txt_files = [f for f in os.listdir("notes") if f.endswith(".txt")]
 
