@@ -25,17 +25,15 @@ class CustomWindowFrame(QFrame):
         self.dragPosition = None
 
     def mousePressEvent(self, event):
-        # Handle window dragging
         if event.button() == Qt.MouseButton.LeftButton:
-            self.dragPosition = event.pos()  # Use pos() instead of globalPos()
+            self.dragPosition = (
+                event.globalPosition().toPoint() - self.frameGeometry().topLeft()
+            )
             event.accept()
 
     def mouseMoveEvent(self, event):
-        # Handle window dragging (optional)
-        if self.dragPosition:
-            diff = event.pos() - self.dragPosition
-            self.move(self.x() + diff.x(), self.y() + diff.y())
-            self.dragPosition = event.pos()
+        if self.dragPosition and event.buttons() == Qt.MouseButton.LeftButton:
+            self.move(event.globalPosition().toPoint() - self.dragPosition)
             event.accept()
 
     def mouseReleaseEvent(self, event):
