@@ -1,5 +1,5 @@
 import sys
-import os, re
+import os
 import random
 from PyQt6.QtWidgets import (
     QApplication,
@@ -12,8 +12,9 @@ from PyQt6.QtWidgets import (
     QWidget,
     QSizePolicy,
     QMenu,
+    QFileDialog,
 )
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QPoint
 from PyQt6.QtGui import (
     QColor,
     QTextListFormat,
@@ -21,6 +22,8 @@ from PyQt6.QtGui import (
     QAction,
     QPixmap,
     QIcon,
+    QImage,
+    QTextDocument,
 )
 from datetime import datetime
 import markdown2
@@ -108,7 +111,7 @@ class NoteWindow(CustomWindowFrame):
         # Add spacer to push toolbar to the bottom
         spacer = QWidget()
         spacer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        layout.addWidget(spacer)
+        # layout.addWidget(spacer)
 
         # Buttons Layout
         buttons_layout = QHBoxLayout()
@@ -137,6 +140,18 @@ class NoteWindow(CustomWindowFrame):
         self.color_picker_button.setFixedSize(24, 24)
         self.color_picker_button.clicked.connect(self.show_color_menu)
         buttons_layout.addWidget(self.color_picker_button)
+
+        # Insert Image Button
+        self.insert_image_button = QPushButton()
+        self.insert_image_button.setIcon(QIcon(QPixmap("icons/photo.circle.png")))
+        self.insert_image_button.setStyleSheet("border: 2; padding: 2; border: none;")
+        self.insert_image_button.setFixedSize(24, 24)
+        self.insert_image_button.clicked.connect(self.insert_image)
+        buttons_layout.addWidget(self.insert_image_button)
+
+        # Toolbar
+        toolbar = QToolBar()
+        toolbar.setStyleSheet("QToolBar QToolButton { color: darkgray; }")
 
         layout.addLayout(buttons_layout)
 
@@ -191,6 +206,45 @@ class NoteWindow(CustomWindowFrame):
 
         # Define functions for toggling rich text formatting
 
+    def format_text(self, fmt):
+        cursor = self.text_edit.textCursor()
+        if not cursor.hasSelection():
+            cursor.select(cursor.SelectionType.WordUnderCursor)
+        cursor.mergeCharFormat(fmt)
+
+    def insert_image(self):
+        file_path, _ = QFileDialog.getOpenFileName(
+            self, "Select Image", "", "Images (*.png *.jpg *.jpeg *.bmp)"
+        )
+        if file_path:
+            self.add_image_to_note(file_path)
+
+    def add_image_to_note(self, file_path):
+        # Ensure the "images" directory exists before file operations
+        if not os.path.exists("images"):
+            os.makedirs("images")
+
+        # Copy the selected image to the "images" directory
+        image_filename = os.path.basename(file_path)
+        new_image_path = os.path.join("images", image_filename)
+        if not os.path.exists(new_image_path):
+            with open(file_path, "rb") as source_file:
+                with open(new_image_path, "wb") as dest_file:
+                    dest_file.write(source_file.read())
+
+        # Load and scale the image to fit within the note window
+        image = QImage(new_image_path)
+        max_width = (
+            self.text_edit.width() - 20
+        )  # Adjust to fit within the text edit area
+        if image.width() > max_width:
+            image = image.scaledToWidth(
+                max_width, Qt.TransformationMode.SmoothTransformation
+            )
+
+        cursor = self.text_edit.textCursor()
+        cursor.insertImage(new_image_path)  # Insert the image path into the document
+
     def delete_note(self):
         file = os.path.basename(self.filename)
         print(file)
@@ -243,6 +297,24 @@ class NoteWindow(CustomWindowFrame):
             file.write(f"Title: {self.title}\n")
             file.write(f"Color: {self.color.rgb()}\n")
             file.write(self.note)
+
+    def load_note_content(self):
+        with open(self.filename, "r") as file:
+            lines = file.readlines()
+            title = (
+                lines[0][7:].strip() if lines and lines[0].startswith("Title: ") else ""
+            )
+            color_value = (
+                int(lines[1][7:].strip())
+                if len(lines) > 1 and lines[1].startswith("Color: ")
+                else QColor(255, 255, 255).rgb()
+            )  # Default to white if no color is specified
+            note_content = "".join(lines[2:]) if len(lines) > 2 else ""
+
+            self.title_label.setPlainText(title)
+            self.color = QColor.fromRgb(color_value)
+            self.setStyleSheet(f"background-color: {self.color.name()};")
+            self.text_edit.setHtml(note_content)
 
 
 def load_notes():
