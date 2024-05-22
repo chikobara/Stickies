@@ -47,15 +47,6 @@ pyqt6-note-app/
 └── README.md               # Project README file
 ```
 
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps to contribute:
-
-1. **Fork the Repository**
-2. **Create a Branch** (`git checkout -b feature/YourFeature`)
-3. **Commit Your Changes** (`git commit -m 'Add some feature'`)
-4. **Push to the Branch** (`git push origin feature/YourFeature`)
-5. **Open a Pull Request**
 
 
 ## 📧 Contact
