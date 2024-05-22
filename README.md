@@ -1,6 +1,3 @@
-Here's a README file for your Python project. This file includes sections that describe the project, installation steps, usage instructions, and contribution guidelines. It also incorporates appropriate formatting and emojis to make it visually appealing.
-
-```markdown
 # 📝 PyQt6 Note App
 
 A simple, customizable note-taking application built with PyQt6. This application allows you to create, edit, and manage notes with rich text formatting, color customization, and image insertion capabilities.
@@ -16,8 +13,8 @@ A simple, customizable note-taking application built with PyQt6. This applicatio
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/yourusername/pyqt6-note-app.git
-   cd pyqt6-note-app
+   git clone https://github.com/chikobara/Stickies.git
+   cd Stickies
    ```
 
 2. **Create a Virtual Environment** (optional but recommended):
@@ -60,17 +57,11 @@ Contributions are welcome! Please follow these steps to contribute:
 4. **Push to the Branch** (`git push origin feature/YourFeature`)
 5. **Open a Pull Request**
 
-## 📄 License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## 📧 Contact
 
-For any inquiries, please contact [your.email@example.com](mailto:your.email@example.com).
+For any inquiries, please contact [albaraa.as.2002@gmail.com](mailto:albaraa.as.2002@gmail.com).
 
 ---
 
 *Happy Coding!* 😊
-```
-
-Make sure to replace `https://github.com/yourusername/pyqt6-note-app.git` with the actual URL of your GitHub repository and `your.email@example.com` with your email address. Save this content into a `README.md` file in the root directory of your project.
