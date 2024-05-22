@@ -57,5 +57,3 @@ For any inquiries, please contact [albaraa.as.2002@gmail.com](mailto:albaraa.as.
 
 *Happy Coding!* 😊
 
-## MIT LICENSE
-(LICENSE)[LICENSE]
