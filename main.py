@@ -76,7 +76,7 @@ class NoteWindow(CustomWindowFrame):
         )  # Use provided color or generate a new one
         self.note = note
         self.setup_ui()
-        self.resize(800, 600)
+        self.resize(400, 300)
         self.set_title_and_note()
 
     def set_title_and_note(self):
