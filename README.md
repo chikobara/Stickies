@@ -1,4 +1,4 @@
-# 📝 PyQt6 Note App
+# 📝 Sticky Note App built with PyQt6
 
 A simple, customizable note-taking application built with PyQt6. This application allows you to create, edit, and manage notes with rich text formatting, color customization, and image insertion capabilities.
 
